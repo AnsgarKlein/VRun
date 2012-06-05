@@ -31,5 +31,5 @@ Build
 -----
 
 When you have all dependencies installed simply do:
-	$ make 
+	$ make  
 	$ make install	(you might want to sudo this) 
