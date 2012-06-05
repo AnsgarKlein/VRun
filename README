@@ -1,0 +1,12 @@
+VLaunch is a fast and clean Application Launcher,
+written in Vala and Gtk.
+
+Features:
+	-	Text Completion
+		VLaunch will complete the commands you type into
+		the text field. ( 'fire' -> 'firefox' )
+		Completion happens inside the TextEntryArea and
+		without annoying drop down menus.
+	-	Fork Support
+		Newly created process runs on its own (no parent)
+		VLaunch quits completely.
