@@ -153,11 +153,11 @@ public class runDialog : Gtk.Window {
 		binaries = new List<string>();
 		
 		//Scan all directories and add all their files to this.binaries
-		foreach (string directory in directories) {
-			
-			try {
-				GLib.File tempDirectory = GLib.File.new_for_path(directory);
-				GLib.FileEnumerator enm = tempDirectory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
+		foreach (string d in directories) {
+
+			GLib.File directory = GLib.File.new_for_path(d);
+			try {	
+				GLib.FileEnumerator enm = directory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
 				
 				GLib.FileInfo fileInfo;
 				while( (fileInfo = enm.next_file()) != null ) {
@@ -165,8 +165,11 @@ public class runDialog : Gtk.Window {
 				}
 			}
 			catch (Error e) {
-				stderr.printf("error occured while scanning directories\n");
-				stderr.printf(e.message+"\n");
+				stderr.printf("\n#######################################\n");
+				stderr.printf("Error occured while scanning directories\n");
+				stderr.printf("Error: \""+e.message+"\"\n");
+				stdout.printf("Directory: "+d+"\n");
+				stderr.printf("#######################################\n");
 			}
 		}
 	}
