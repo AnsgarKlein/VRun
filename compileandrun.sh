@@ -4,4 +4,4 @@ clear && clear && clear
 
 make
 
-./vlaunch
+./vstart

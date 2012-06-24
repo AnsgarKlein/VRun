@@ -3,12 +3,12 @@ PACKAGES	=	--pkg gtk+-3.0
 
 CC			=	valac
 CFLAGS		=	$(PACKAGES) --thread
-SOURCES		=	src/vlaunch.vala
+SOURCES		=	src/vstart.vala
 
-BINARY		=	vlaunch
+BINARY		=	vstart
 
 
-all: VLaunch
+all: VStart
 	#sucessfully compiled everything
 
 install:
@@ -22,6 +22,6 @@ clean:
 
 
 
-VLaunch: $(SOURCES)
+VStart: $(SOURCES)
 	$(CC) $(CFLAGS) $(SOURCES) -o $(BINARY)
 

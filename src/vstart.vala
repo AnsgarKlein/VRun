@@ -156,7 +156,7 @@ public class runDialog : Gtk.Window {
 		foreach (string d in directories) {
 
 			GLib.File directory = GLib.File.new_for_path(d);
-			try {	
+			try {
 				GLib.FileEnumerator enm = directory.enumerate_children(FileAttribute.STANDARD_NAME, 0);
 				
 				GLib.FileInfo fileInfo;
