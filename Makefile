@@ -3,9 +3,9 @@ PACKAGES	=	--pkg gtk+-3.0
 
 CC			=	valac
 CFLAGS		=	$(PACKAGES) --thread
-SOURCES		=	src/vstart.vala
+SOURCES		=	src/vrun.vala
 
-BINARY		=	vstart
+BINARY		=	vrun
 
 
 all: VStart

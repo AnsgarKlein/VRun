@@ -4,4 +4,4 @@ clear && clear && clear
 
 make
 
-./vstart
+./vrun

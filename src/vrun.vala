@@ -30,7 +30,7 @@ public class runDialog : Gtk.Window {
 	
 	public runDialog() {
 		base.destroy.connect(Gtk.main_quit);
-		base.set_title("VLaunch");
+		base.set_title("Run");
 		base.stick();										//show on all desktops
 		//base.set_decorated(false);
 		//base.set_type_hint(Gdk.WindowTypeHint.MENU);		//removes minimize(/iconify),maximize buttons

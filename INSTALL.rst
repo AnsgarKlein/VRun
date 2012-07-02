@@ -1,20 +1,20 @@
-Installation Instructions for VLaunch
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Installation Instructions for VRun
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Gtk3
 ----
 
-To install VLaunch you will need to have Gtk3 installed.
+To install VRun you will need to have Gtk3 installed.
 
 
 
 Vala
 ----
 
-Since VLaunch is written in Vala you also need the vala compiler (valac) and it's dependencies.
+Since VRun is written in Vala you also need the vala compiler (valac) and it's dependencies.
 
-You will need at least version 0.16 to compile VLaunch successfully.
+You will need at least version 0.16 to compile successfully.
 
 On Ubuntu theses packages are called:
 	* ``valac-0.16``
@@ -33,4 +33,14 @@ Build
 When you have all dependencies installed simply do:
 	$ make
 
-	$ make install	(you might want to sudo this) 
+	$ make install	(you might want to sudo this)
+
+
+
+Usage
+-----
+
+Once you have installed VRun you can start it with the 'vrun' command.
+
+I recommend binding the 'vrun' command to a keyboard
+shortcut like SUPER+R (Windows+R)
