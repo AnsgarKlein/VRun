@@ -1,6 +1,3 @@
 
 #ignore temp files (like created by gedit)
 *~
-
-#ignore compiled file (see makefile)
-vrun

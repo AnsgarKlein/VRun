@@ -5,6 +5,7 @@ CC			=	valac
 CFLAGS		=	$(PACKAGES) --thread
 SOURCES		=	src/vrun.vala
 
+BUILDPATH	=	build/
 BINARY		=	vrun
 
 
@@ -12,16 +13,16 @@ all: VStart
 	#sucessfully compiled everything
 
 install:
-	cp $(BINARY) /usr/bin/$(BINARY)
+	cp $(BUILDPATH)$(BINARY) /usr/bin/$(BINARY)
 
 uninstall:
 	rm /usr/bin/$(BINARY)
 
 clean:
-	rm $(BINARY)
+	rm $(BUILDPATH)$(BINARY)
 
 
 
 VStart: $(SOURCES)
-	$(CC) $(CFLAGS) $(SOURCES) -o $(BINARY)
+	$(CC) $(CFLAGS) $(SOURCES) -o $(BUILDPATH)$(BINARY)
 
