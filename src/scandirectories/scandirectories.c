@@ -1,101 +1,97 @@
-//#include <stdlib.h>
 #include <stdio.h>
-#include <string.h>			//for strcat & strcpy
-#include <glob.h>			//for glob (who would have thought)
-
-void readDirectories(int strings_c, char* strings_v[], int do_print);
-void readDirectory(char* str, int do_print);
-void printError(char* error, char* directory);
-
-int main(int argc, char* argv[]) {
-	readDirectory("/usr/bin", 0);
-	return 0;
-}
-
-void readDirectories(int strings_c, char* strings_v[], int do_print) {
-	
-	int i;
-	for (i=0; i<strings_c; i++) {
-		readDirectory(strings_v[i], do_print);
-	}
-}
-
-void readDirectory(char* str, int do_print) {
-	
-	//Create directory-string
-	if (str[ strlen(str)-1 ] == '/') {
-		char directory[ strlen(str)+1 ];
-		strcpy(directory, str);
-		
-		strcat(directory, "*");
-	}
-	else {
-		char directory[ strlen(str)+2 ];
-		strcpy(directory, str);
-		
-		strcat(directory, "/");
-		strcat(directory, "*");
-	}
-
-	//printf("\n%c\n", directory[strlen(directory)] );
-	
-	/**
-	printf("str[0]: %c\n", str[0]);
-	printf("str[1]: %c\n", str[1]);
-	printf("str[2]: %c\n", str[2]);
-	printf("str[3]: %c\n", str[3]);
-	printf("str[4]: %c\n", str[4]);
-	printf("str[5]: %c\n", str[5]);
-	printf("str[6]: %c\n", str[6]);
-	printf("str[7]: %c\n", str[7]);
-	printf("str[8]: %c\n", str[8]);
-	printf("str[9]: %c\n", str[9]);
-	printf("str[10]: %c\n", str[10]);
-	printf("str[11]: %c\n", str[11]);
-	printf("str[12]: %c\n", str[12]);
-	printf("str[13]: %c\n", str[13]);
-	printf("str[14]: %c\n", str[14]);
-	printf("str[15]: %c\n", str[15]);
-	**/
-	
-	
-	//Check for errors
-	glob_t data;
-	int error = glob(str, 0, NULL, &data );
-	switch(error) {
-		case 0:
-			break;											//succeeded
-		case GLOB_ABORTED:
-			printError("Reading error ! - GLOB_ABORTED", str);
-			return; break;
-		case GLOB_NOMATCH:
-			printError("No files found ! - GLOB_NOMATCH", str);
-			return; break;
-		case GLOB_NOSPACE:
-			printError("Out of memory ! - GLOB_NOSPACE", str);
-			return; break;
-		default:
-			printError("Something weird happend ...", str);
-			return; break;
-	}
-	
-	//Print values (if supposed to)
-	if (do_print != 0) {
-		int i;
-		for(i=0; i<data.gl_pathc; i++) {
-			//printf("File %d: %s\n", i+1, data.gl_pathv[i]);
-		}
-	}
-	
-	globfree(&data);
-}
+#include <stdlib.h>
+#include <string.h>
+#include <glob.h>
 
 void printError(char* error, char* directory) {
-	//printf(         "Error: %s\n", str);
-	//fprintf(stderr, "Error: %s\n", str);
 	fprintf(stderr, "\n##################################################\n");
 	fprintf(stderr, "While reading directory, something went wrong !\n");
 	fprintf(stderr, "Error Message: %s\n", error);
 	fprintf(stderr, "Directory: %s\n", directory);
 	fprintf(stderr, "##################################################\n\n");
 }
+
+int readDirectory(char* str, int doprint) {
+	int str_c = strlen(str);
+	char* directory;
+	
+	//Create directory-string
+	if (str[str_c - 1] == '/') { //if str ends with '/' append '*'
+		directory = malloc(str_c + 2);
+		strcpy(directory, str);
+		
+		directory[str_c] = '*';
+		directory[str_c+1] = '\0';
+	}
+	else { //else append '/' and '*'
+		directory = malloc(str_c + 3);
+		strcpy(directory, str);
+		
+		directory[str_c] = '/';
+		directory[str_c+1] = '*';
+		directory[str_c+2] = '\0';
+	}
+	
+	
+	//Check for errors
+	glob_t data;
+	int glob_error = glob(directory, 0, NULL, &data);
+	switch(glob_error) {
+		case 0: //succeeded
+			break;
+		case GLOB_ABORTED:
+			printError("Reading error ! - GLOB_ABORTED", directory);
+			break;
+		case GLOB_NOMATCH:
+			printError("No files found ! - GLOB_NOMATCH", directory);
+			break;
+		case GLOB_NOSPACE:
+			printError("Out of memory ! - GLOB_NOSPACE", directory);
+			break;
+		default:
+			printError("Something weird happend ...", directory);
+			break;
+	}
+	if (glob_error != 0) {
+		free(directory);
+		globfree(&data);
+		return 1;
+	}
+	
+	//Print values (if supposed to)
+	if (doprint != 0) {
+		printf("\nPath  :\t-\t %s\n", directory);
+		
+		int i;
+		for(i=0; i<data.gl_pathc; i++) {
+			printf("File %d: -\t %s\n", i+1, data.gl_pathv[i]);
+		}
+	}
+	
+	free(directory);
+	globfree(&data);
+	return 0;
+}	
+
+int readDirectories(int directories_c, char* directories_v[], int doprint) {
+	int returnValue = 0;
+	
+	int i;
+	for (i=0; i<directories_c; i++) {
+		if (readDirectory(directories_v[i], doprint) != 0) {
+			returnValue = 1;
+		}
+	}
+	
+	return returnValue;
+}
+
+#ifdef WITHMAIN
+int main(int argc, char* argv[]) {
+	char* p[] = {"/usr/bin/", "/bin"};
+	int returncode = readDirectories(2, p, 0);
+	
+	printf("Return-Code was: %d\n", returncode);
+	return returncode;
+}
+#endif
