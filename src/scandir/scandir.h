@@ -34,13 +34,14 @@
     /** Ensures that the passed path ends with `/*`. **/
     static char* makeGlobby(int len, char* path, AllocProc alloc);
 
-    /** Globs a directory and fills the passed `StringNode**` with the
-        beginning of the list of paths. All `StringNode*` objects are allocated
-        using the passed allocator. The passed string is ensured to end with
-        `/*`. A non-zero return-value indicates an error. The `FreeProc` value
-        must be passed in case an allocation failed during list-creation.
-        Previously allocated memory must be freed in this case. **/
-    int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
-                      FreeProc free);
+    /** Globs the passed directory and creates a list of `StringNode*`. The
+        passed *\*\*listhead* and *\*\*listtail* are filled with the head and
+        tail of the resulting list. All data that is left to the caller is
+        allocated via the passed `AllocProc`*alloc* function. The `FreeProc`
+        argument is necessary in case an allocation failed during the process
+        of creating a list.
+        A non-zero return-value indicates an error. **/
+    int scanDirectory(char* path, StringNode** listhead, StringNode** listtail,
+                      AllocProc alloc, FreeProc free);
 
 #endif // SCANDIR_H

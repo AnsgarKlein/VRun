@@ -29,8 +29,8 @@ static char* makeGlobby(int len, char* path, AllocProc alloc) {
     return globby;
 }
 
-int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
-                  FreeProc free) {
+int scanDirectory(char* path, StringNode** listhead, StringNode** listtail,
+                  AllocProc alloc, FreeProc free) {
     path = makeGlobby(strlen(path), path, malloc);
     glob_t data;
     int glob_error = glob(path, 0, NULL, &data);
@@ -61,6 +61,11 @@ int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
         free(path);
         globfree(&data);
         *listhead = NULL;
+        *listtail = NULL;
+        // It's still ok when no paths were found.
+        if (glob_error == GLOB_NOMATCH) {
+            return 0;
+        }
         return SCANDIR_GLOBERROR;
     }
 
@@ -71,10 +76,12 @@ int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
         globfree(&data);
         return SCANDIR_ALLOCFAIL;
     }
+
     StringNode* node = *listhead;
     int i;
     char* glob_path;
     int   glob_path_len;
+
     for (i=0; i < data.gl_pathc; i++) {
         glob_path = data.gl_pathv[i];
         glob_path_len = strlen(glob_path);
@@ -89,6 +96,7 @@ int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
         }
         memcpy(node->string, glob_path, glob_path_len + 1);
 
+        // Allocate a new node.
         if (i < data.gl_pathc - 1) {
             node->next = alloc(sizeof(StringNode));
             if (!node->next) {
@@ -104,6 +112,7 @@ int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
         }
     }
     node->next = NULL;
+    *listtail = node;
 
     free(path);
     globfree(&data);
@@ -134,7 +143,8 @@ int scanDirectory(char* path, StringNode** listhead, AllocProc alloc,
         printf("\n---------------------\n");
         char* path = "/usr/bin/";
         StringNode* node = NULL;
-        int success = scanDirectory(path, &node, malloc, free);
+        StringNode* tail = NULL;
+        int success = scanDirectory(path, &node, &tail, malloc, free);
         if (success != 0) {
             printf("scanDirectory() returned non-zero. Break.\n");
             return success;
