@@ -94,15 +94,15 @@ public class runDialog : Gtk.Window {
 		mainBox.pack_start(buttonBox, false, true);
 		
 		Gtk.Button startButton = new Gtk.Button.with_label("Start");
-		startButton.pressed.connect( () => start(null) );
+		startButton.button_press_event.connect( (x) => { start(null); return true; } );
 		buttonBox.pack_start(startButton, true, true);
 		
 		Gtk.Button abortButton = new Gtk.Button.with_label("Abort");
-		abortButton.pressed.connect(quit);
+		abortButton.button_press_event.connect( (x) => { quit(); return true; } );
 		buttonBox.pack_start(abortButton, true, true);
 		
 		Gtk.Button searchButton = new Gtk.Button.with_label("Search");
-		searchButton.pressed.connect(open_fileChooser);
+		searchButton.button_press_event.connect( (x) => { open_fileChooser(); return true; } );
 		buttonBox.pack_start(searchButton, true, true);
 	}
 	
@@ -162,7 +162,7 @@ public class runDialog : Gtk.Window {
 		this.quit();
 	}
 	
-    private async void parseBins() {
+    private void parseBins() {
 		//string[] directories = { "/bin", "/sbin", "/usr/bin", "/usr/sbin", "/usr/local/bin", "/usr/local/sbin" };
 		string[] directories = GLib.Environment.get_variable("PATH").split(":");
 		binaries = null;
