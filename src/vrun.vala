@@ -149,6 +149,12 @@ public class runDialog : Gtk.Window {
 		
 		//Launch the program
 		try {
+			//suppressed any output of the started program (is this actually a good idea?)
+			//(at least it makes it easier to debug)
+			stderr = GLib.FileStream.open("/dev/null", "w");
+			stdout = GLib.FileStream.open("/dev/null", "w");
+			
+			//start async
 			GLib.Process.spawn_command_line_async(execPath);
 		}
 		catch (SpawnError e) {
