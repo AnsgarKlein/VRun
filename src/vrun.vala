@@ -94,15 +94,15 @@ public class runDialog : Gtk.Window {
 		mainBox.pack_start(buttonBox, false, true);
 		
 		Gtk.Button startButton = new Gtk.Button.with_label("Start");
-		startButton.button_press_event.connect( (x) => { start(null); return true; } );
+		startButton.button_press_event.connect( () => { start(null); return true; } );
 		buttonBox.pack_start(startButton, true, true);
 		
 		Gtk.Button abortButton = new Gtk.Button.with_label("Abort");
-		abortButton.button_press_event.connect( (x) => { quit(); return true; } );
+		abortButton.button_press_event.connect( () => { quit(); return true; } );
 		buttonBox.pack_start(abortButton, true, true);
 		
 		Gtk.Button searchButton = new Gtk.Button.with_label("Search");
-		searchButton.button_press_event.connect( (x) => { open_fileChooser(); return true; } );
+		searchButton.button_press_event.connect( () => { open_fileChooser(); return true; } );
 		buttonBox.pack_start(searchButton, true, true);
 	}
 	
